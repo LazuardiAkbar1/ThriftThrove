@@ -265,58 +265,6 @@ const handleChatMessage = (socket, message) => {
     });
 };
 
-// Fungsi untuk melupakan password
-const forgetPassword = (req, res) => {
-    const { email } = req.body;
-
-    const sql = 'SELECT * FROM users WHERE email = ?';
-    db.query(sql, [email], (err, results) => {
-        if (err) return res.status(500).send('Error on the server.');
-        if (results.length === 0) return res.status(404).send('No user found with this email.');
-
-        const user = results[0];
-        const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: 3600 });
-
-        const transporter = nodemailer.createTransport({
-            service: 'Gmail',
-            auth: {
-                user: process.env.EMAIL,
-                pass: process.env.EMAIL_PASSWORD
-            }
-        });
-
-        const mailOptions = {
-            from: process.env.EMAIL,
-            to: email,
-            subject: 'Password Reset',
-            text: `Click the link to reset your password: http://localhost:3000/reset-password?token=${token}`
-        };
-
-        transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-                return res.status(500).send('Error on the server.');
-            }
-            res.status(200).send('Password reset link sent to your email.');
-        });
-    });
-};
-
-// Fungsi untuk mengatur ulang password
-const resetPassword = (req, res) => {
-    const { token, newPassword } = req.body;
-
-    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-        if (err) return res.status(403).send('Access Denied: Invalid Token!');
-
-        const hashedPassword = bcrypt.hashSync(newPassword, 8);
-        const sql = 'UPDATE users SET password = ? WHERE id = ?';
-
-        db.query(sql, [hashedPassword, decoded.id], (err, result) => {
-            if (err) return res.status(500).send('Error on the server.');
-            res.status(200).send('Password reset successfully.');
-        });
-    });
-};
 
 // Fungsi untuk mendapatkan keranjang
 // Fungsi untuk mendapatkan keranjang
@@ -358,8 +306,6 @@ module.exports = {
     checkout,
     trackOrder,
     handleChatMessage,
-    forgetPassword,
-    resetPassword,
     getItemsByOwnerId,
     getCart
 };
