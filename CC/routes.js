@@ -1,26 +1,19 @@
-const { Storage } = require('@google-cloud/storage');
-const storage = new Storage();
-const bucket = storage.bucket('assets_thrifttrove2'); // Ganti dengan nama bucket Anda
+const express = require('express');
+const multer = require('multer');
+const handlers = require('./handler');
 
-const uploadImageToGCS = (file) => {
-    return new Promise((resolve, reject) => {
-        const blob = bucket.file(Date.now() + '-' + file.originalname);
-        const blobStream = blob.createWriteStream({
-            resumable: false
-        });
+const router = express.Router();
 
-        blobStream.on('error', (err) => {
-            reject(err);
-        });
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/');
+    },
+    filename: (req, file, cb) => {
+        cb(null, `${Date.now()}-${file.originalname}`);
+    }
+});
 
-        blobStream.on('finish', () => {
-            const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
-            resolve(publicUrl);
-        });
-
-        blobStream.end(file.buffer);
-    });
-};
+const upload = multer({ storage });
 
 
 // Tambah akun
