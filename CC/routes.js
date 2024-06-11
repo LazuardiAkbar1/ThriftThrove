@@ -46,8 +46,5 @@ router.delete('/cart', handlers.authenticateToken, handlers.deleteCartItem);
 // Rute untuk tracking barang
 router.get('/track/:orderId', handlers.authenticateToken, handlers.trackOrder);
 
-// Rute untuk melupakan password
-router.post('/forget-password', handlers.forgetPassword);
-router.post('/reset-password', handlers.resetPassword);
 
 module.exports = router;
