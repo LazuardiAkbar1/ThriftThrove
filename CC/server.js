@@ -7,8 +7,8 @@ const socketIo = require('socket.io');
 const routes = require('./routes');
 
 const app = express();
-const port = process.env.PORT || 3000;
-const host = 'localhost';
+const port = process.env.PORT || 8080;
+const host = '0.0.0.0';
 
 app.use(cors({
     origin: ['*'],
