@@ -93,17 +93,28 @@ const getItemById = (req, res) => {
 };
 
 // Fungsi untuk menambahkan item
-const addItem = (req, res) => {
+const addItem = async (req, res) => {
     const { name, description, price } = req.body;
-    const image = req.file.filename;
     const ownerId = req.user.id; 
 
-    const sql = 'INSERT INTO items (name, description, price, image, owner_id) VALUES (?, ?, ?, ?, ?)';
-    db.query(sql, [name, description, price, image, ownerId], (err, result) => {
-        if (err) return res.status(500).send('Error on the server.');
-        res.status(201).send({ id: result.insertId });
-    });
+    try {
+        if (!req.file) {
+            return res.status(400).send('No file uploaded.');
+        }
+
+        const publicUrl = await uploadImageToGCS(req.file); // Anda perlu mengimplementasikan fungsi uploadImageToGCS() untuk mengunggah gambar ke GCS
+
+        const sql = 'INSERT INTO items (name, description, price, image, owner_id) VALUES (?, ?, ?, ?, ?)';
+        db.query(sql, [name, description, price, publicUrl, ownerId], (err, result) => {
+            if (err) return res.status(500).send('Error on the server.');
+            res.status(201).send({ id: result.insertId });
+        });
+    } catch (err) {
+        console.error('Error uploading to GCS:', err);
+        res.status(500).send('Error on the server.');
+    }
 };
+
 
 
 // Fungsi untuk memperbarui item
