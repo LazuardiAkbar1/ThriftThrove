@@ -1,19 +1,27 @@
-const express = require('express');
-const multer = require('multer');
-const handlers = require('./handler');
+const { Storage } = require('@google-cloud/storage');
+const storage = new Storage();
+const bucket = storage.bucket('your-bucket-name'); // Ganti dengan nama bucket Anda
 
-const router = express.Router();
+const uploadImageToGCS = (file) => {
+    return new Promise((resolve, reject) => {
+        const blob = bucket.file(Date.now() + '-' + file.originalname);
+        const blobStream = blob.createWriteStream({
+            resumable: false
+        });
 
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'uploads/');
-    },
-    filename: (req, file, cb) => {
-        cb(null, `${Date.now()}-${file.originalname}`);
-    }
-});
+        blobStream.on('error', (err) => {
+            reject(err);
+        });
 
-const upload = multer({ storage });
+        blobStream.on('finish', () => {
+            const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
+            resolve(publicUrl);
+        });
+
+        blobStream.end(file.buffer);
+    });
+};
+
 
 // Tambah akun
 router.post('/signup', handlers.signUp);
