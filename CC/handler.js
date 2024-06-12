@@ -2,10 +2,12 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('./dbhandler');
 const nodemailer = require('nodemailer');
-
+const { Storage } = require('@google-cloud/storage');
+const path = require('path');
 const storage = new Storage({
     projectId: "thrifttrove2",
 });
+
 // Fungsi autentikasi token
 const authenticateToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
@@ -94,6 +96,7 @@ const getItemById = (req, res) => {
         res.status(200).send(result[0]);
     });
 };
+
 
 const bucketName = "assets_thrifttrove2";
 const bucket = storage.bucket(bucketName);  
