@@ -3,6 +3,9 @@ const jwt = require('jsonwebtoken');
 const db = require('./dbhandler');
 const nodemailer = require('nodemailer');
 
+const storage = new Storage({
+    projectId: "thrifttrove2",
+});
 // Fungsi autentikasi token
 const authenticateToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
