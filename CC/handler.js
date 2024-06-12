@@ -92,17 +92,44 @@ const getItemById = (req, res) => {
     });
 };
 
+const bucketName = "assets_thrifttrove2";
+const bucket = storage.bucket(bucketName);  
+
 // Fungsi untuk menambahkan item
 const addItem = (req, res) => {
     const { name, description, price } = req.body;
-    const image = req.file.filename;
-    const ownerId = req.user.id; 
+    const imageFile = req.file;
 
-    const sql = 'INSERT INTO items (name, description, price, image, owner_id) VALUES (?, ?, ?, ?, ?)';
-    db.query(sql, [name, description, price, image, ownerId], (err, result) => {
-        if (err) return res.status(500).send('Error on the server.');
-        res.status(201).send({ id: result.insertId });
+    if (!imageFile) {
+        return res.status(400).send('No image file provided.');
+    }
+
+    const filename = Date.now() + path.extname(imageFile.originalname);
+    const blob = bucket.file(filename);
+
+    const blobStream = blob.createWriteStream({
+        resumable: false,
+        contentType: imageFile.mimetype,
     });
+
+    blobStream.on('error', (err) => {
+        console.error(err);
+        return res.status(500).send('Error uploading image.');
+    });
+
+    blobStream.on('finish', () => {
+        const imageUrl = `https://storage.googleapis.com/${bucketName}/${filename}`;
+
+        const ownerId = req.user.id;
+        const sql = 'INSERT INTO items (name, description, price, image, owner_id) VALUES (?, ?, ?, ?, ?)';
+
+        db.query(sql, [name, description, price, imageUrl, ownerId], (err, result) => {
+            if (err) return res.status(500).send('Error on the server.');
+            res.status(201).send({ id: result.insertId });
+        });
+    });
+
+    blobStream.end(imageFile.buffer);
 };
 
 
