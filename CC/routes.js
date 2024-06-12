@@ -15,7 +15,6 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-
 // Tambah akun
 router.post('/signup', handlers.signUp);
 // Masuk akun
