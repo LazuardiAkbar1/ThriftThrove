@@ -302,13 +302,15 @@ const handleChatMessage = (socket, message) => {
 
 
 // Fungsi untuk mendapatkan keranjang
-// Fungsi untuk mendapatkan keranjang
 const getCart = (req, res) => {
     const userId = req.user.id;
     const sql = 'SELECT * FROM cart WHERE user_id = ?';
 
     db.query(sql, [userId], (err, results) => {
-        if (err) return res.status(500).send('Error on the server.');
+        if (err) {
+            console.error('Error fetching cart:', err);
+            return res.status(500).send('Error fetching cart.');
+        }
 
         // Ambil nama item dari tabel items untuk setiap item di keranjang
         const cartItems = results.map(item => {
@@ -317,11 +319,13 @@ const getCart = (req, res) => {
                 user_id: item.user_id,
                 item_id: item.item_id,
                 item_name: item.item_name,
+                price: item.price,
+                image: item.image,
                 quantity: item.quantity
             };
         });
 
-        res.status(200).send(cartItems);
+        res.status(200).json(cartItems);
     });
 };
 
