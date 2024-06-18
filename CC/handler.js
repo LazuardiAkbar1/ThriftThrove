@@ -183,13 +183,15 @@ const addItemToCart = (req, res) => {
     const { itemId, quantity } = req.body;
     const userId = req.user.id;
 
-    // Ambil informasi nama item dari tabel items
-    const getItemSql = 'SELECT name FROM items WHERE id = ?';
+    // Ambil informasi nama, price, dan image item dari tabel items
+    const getItemSql = 'SELECT name, price, image FROM items WHERE id = ?';
     db.query(getItemSql, [itemId], (err, results) => {
         if (err) return res.status(500).send('Error on the server.');
         if (results.length === 0) return res.status(404).send('Item not found.');
 
         const itemName = results[0].name;
+        const itemPrice = results[0].price;
+        const itemImage = results[0].image;
 
         // Cek apakah item sudah ada di keranjang
         const checkSql = 'SELECT * FROM cart WHERE user_id = ? AND item_id = ?';
@@ -198,15 +200,15 @@ const addItemToCart = (req, res) => {
 
             if (results.length > 0) {
                 // Jika item sudah ada di keranjang, tambahkan jumlahnya
-                const updateSql = 'UPDATE cart SET quantity = quantity + ?, item_name = ? WHERE user_id = ? AND item_id = ?';
-                db.query(updateSql, [quantity, itemName, userId, itemId], (err, result) => {
+                const updateSql = 'UPDATE cart SET quantity = quantity + ?, item_name = ?, price = ?, image = ? WHERE user_id = ? AND item_id = ?';
+                db.query(updateSql, [quantity, itemName, itemPrice, itemImage, userId, itemId], (err, result) => {
                     if (err) return res.status(500).send('Error on the server.');
                     return res.status(200).send({ message: 'Cart updated successfully' });
                 });
             } else {
                 // Jika item belum ada di keranjang, tambahkan item baru
-                const sql = 'INSERT INTO cart (user_id, item_id, item_name, quantity) VALUES (?, ?, ?, ?)';
-                db.query(sql, [userId, itemId, itemName, quantity], (err, result) => {
+                const sql = 'INSERT INTO cart (user_id, item_id, item_name, price, image, quantity) VALUES (?, ?, ?, ?, ?, ?)';
+                db.query(sql, [userId, itemId, itemName, itemPrice, itemImage, quantity], (err, result) => {
                     if (err) return res.status(500).send('Error on the server.');
                     return res.status(201).send({ message: 'Item added to cart successfully', cart_id: result.insertId });
                 });
