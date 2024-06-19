@@ -253,10 +253,10 @@ const updateCartItem = (req, res) => {
 
 // Fungsi untuk menghapus item dari keranjang
 const deleteCartItem = (req, res) => {
-    const { cartId } = req.body;
+    const { id } = req.params; // Ambil 'id' dari parameter URL
 
     const sql = 'DELETE FROM cart WHERE id = ?';
-    db.query(sql, [cartId], (err, result) => {
+    db.query(sql, [id], (err, result) => {
         if (err) {
             console.error(err);
             return res.status(500).send('Error on the server.');
