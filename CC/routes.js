@@ -4,14 +4,7 @@ const handlers = require('./handler');
 
 const router = express.Router();
 
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'uploads/');
-    },
-    filename: (req, file, cb) => {
-        cb(null, `${Date.now()}-${file.originalname}`);
-    }
-});
+const storage = multer.memoryStorage();
 
 const upload = multer({ storage });
 
@@ -46,8 +39,5 @@ router.delete('/cart', handlers.authenticateToken, handlers.deleteCartItem);
 // Rute untuk tracking barang
 router.get('/track/:orderId', handlers.authenticateToken, handlers.trackOrder);
 
-// Rute untuk melupakan password
-router.post('/forget-password', handlers.forgetPassword);
-router.post('/reset-password', handlers.resetPassword);
 
 module.exports = router;

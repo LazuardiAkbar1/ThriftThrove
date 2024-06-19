@@ -2,6 +2,11 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('./dbhandler');
 const nodemailer = require('nodemailer');
+const { Storage } = require('@google-cloud/storage');
+const path = require('path');
+const storage = new Storage({
+    projectId: "thrifttrove2",
+});
 
 // Fungsi autentikasi token
 const authenticateToken = (req, res, next) => {
@@ -92,18 +97,48 @@ const getItemById = (req, res) => {
     });
 };
 
+
+const bucketName = "assets_thrifttrove2";
+const bucket = storage.bucket(bucketName);  
+
 // Fungsi untuk menambahkan item
 const addItem = (req, res) => {
     const { name, description, price } = req.body;
-    const image = req.file.filename;
-    const ownerId = req.user.id; 
+    const imageFile = req.file;
 
-    const sql = 'INSERT INTO items (name, description, price, image, owner_id) VALUES (?, ?, ?, ?, ?)';
-    db.query(sql, [name, description, price, image, ownerId], (err, result) => {
-        if (err) return res.status(500).send('Error on the server.');
-        res.status(201).send({ id: result.insertId });
+    if (!imageFile) {
+        return res.status(400).send('No image file provided.');
+    }
+
+    const filename = Date.now() + path.extname(imageFile.originalname);
+    const blob = bucket.file(filename);
+
+    const blobStream = blob.createWriteStream({
+        resumable: false,
+        contentType: imageFile.mimetype,
     });
+
+    blobStream.on('error', (err) => {
+        console.error(err);
+        return res.status(500).send('Error uploading image.');
+    });
+
+    blobStream.on('finish', () => {
+        const imageUrl = `https://storage.googleapis.com/${bucketName}/${filename}`;
+
+        const ownerId = req.user.id;
+        const sql = 'INSERT INTO items (name, description, price, image, owner_id) VALUES (?, ?, ?, ?, ?)';
+
+        db.query(sql, [name, description, price, imageUrl, ownerId], (err, result) => {
+            if (err) return res.status(500).send('Error on the server.');
+            res.status(201).send({ id: result.insertId });
+        });
+    });
+
+    blobStream.end(imageFile.buffer);
 };
+
+
 
 // Fungsi untuk memperbarui item
 const updateItem = (req, res) => {
@@ -148,13 +183,15 @@ const addItemToCart = (req, res) => {
     const { itemId, quantity } = req.body;
     const userId = req.user.id;
 
-    // Ambil informasi nama item dari tabel items
-    const getItemSql = 'SELECT name FROM items WHERE id = ?';
+    // Ambil informasi nama, price, dan image item dari tabel items
+    const getItemSql = 'SELECT name, price, image FROM items WHERE id = ?';
     db.query(getItemSql, [itemId], (err, results) => {
         if (err) return res.status(500).send('Error on the server.');
         if (results.length === 0) return res.status(404).send('Item not found.');
 
         const itemName = results[0].name;
+        const itemPrice = results[0].price;
+        const itemImage = results[0].image;
 
         // Cek apakah item sudah ada di keranjang
         const checkSql = 'SELECT * FROM cart WHERE user_id = ? AND item_id = ?';
@@ -163,15 +200,15 @@ const addItemToCart = (req, res) => {
 
             if (results.length > 0) {
                 // Jika item sudah ada di keranjang, tambahkan jumlahnya
-                const updateSql = 'UPDATE cart SET quantity = quantity + ?, item_name = ? WHERE user_id = ? AND item_id = ?';
-                db.query(updateSql, [quantity, itemName, userId, itemId], (err, result) => {
+                const updateSql = 'UPDATE cart SET quantity = quantity + ?, item_name = ?, price = ?, image = ? WHERE user_id = ? AND item_id = ?';
+                db.query(updateSql, [quantity, itemName, itemPrice, itemImage, userId, itemId], (err, result) => {
                     if (err) return res.status(500).send('Error on the server.');
                     return res.status(200).send({ message: 'Cart updated successfully' });
                 });
             } else {
                 // Jika item belum ada di keranjang, tambahkan item baru
-                const sql = 'INSERT INTO cart (user_id, item_id, item_name, quantity) VALUES (?, ?, ?, ?)';
-                db.query(sql, [userId, itemId, itemName, quantity], (err, result) => {
+                const sql = 'INSERT INTO cart (user_id, item_id, item_name, price, image, quantity) VALUES (?, ?, ?, ?, ?, ?)';
+                db.query(sql, [userId, itemId, itemName, itemPrice, itemImage, quantity], (err, result) => {
                     if (err) return res.status(500).send('Error on the server.');
                     return res.status(201).send({ message: 'Item added to cart successfully', cart_id: result.insertId });
                 });
@@ -265,67 +302,17 @@ const handleChatMessage = (socket, message) => {
     });
 };
 
-// Fungsi untuk melupakan password
-const forgetPassword = (req, res) => {
-    const { email } = req.body;
 
-    const sql = 'SELECT * FROM users WHERE email = ?';
-    db.query(sql, [email], (err, results) => {
-        if (err) return res.status(500).send('Error on the server.');
-        if (results.length === 0) return res.status(404).send('No user found with this email.');
-
-        const user = results[0];
-        const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: 3600 });
-
-        const transporter = nodemailer.createTransport({
-            service: 'Gmail',
-            auth: {
-                user: process.env.EMAIL,
-                pass: process.env.EMAIL_PASSWORD
-            }
-        });
-
-        const mailOptions = {
-            from: process.env.EMAIL,
-            to: email,
-            subject: 'Password Reset',
-            text: `Click the link to reset your password: http://localhost:3000/reset-password?token=${token}`
-        };
-
-        transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-                return res.status(500).send('Error on the server.');
-            }
-            res.status(200).send('Password reset link sent to your email.');
-        });
-    });
-};
-
-// Fungsi untuk mengatur ulang password
-const resetPassword = (req, res) => {
-    const { token, newPassword } = req.body;
-
-    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-        if (err) return res.status(403).send('Access Denied: Invalid Token!');
-
-        const hashedPassword = bcrypt.hashSync(newPassword, 8);
-        const sql = 'UPDATE users SET password = ? WHERE id = ?';
-
-        db.query(sql, [hashedPassword, decoded.id], (err, result) => {
-            if (err) return res.status(500).send('Error on the server.');
-            res.status(200).send('Password reset successfully.');
-        });
-    });
-};
-
-// Fungsi untuk mendapatkan keranjang
 // Fungsi untuk mendapatkan keranjang
 const getCart = (req, res) => {
     const userId = req.user.id;
     const sql = 'SELECT * FROM cart WHERE user_id = ?';
 
     db.query(sql, [userId], (err, results) => {
-        if (err) return res.status(500).send('Error on the server.');
+        if (err) {
+            console.error('Error fetching cart:', err);
+            return res.status(500).send('Error fetching cart.');
+        }
 
         // Ambil nama item dari tabel items untuk setiap item di keranjang
         const cartItems = results.map(item => {
@@ -334,11 +321,13 @@ const getCart = (req, res) => {
                 user_id: item.user_id,
                 item_id: item.item_id,
                 item_name: item.item_name,
+                price: item.price,
+                image: item.image,
                 quantity: item.quantity
             };
         });
 
-        res.status(200).send(cartItems);
+        res.status(200).json(cartItems);
     });
 };
 
@@ -358,8 +347,6 @@ module.exports = {
     checkout,
     trackOrder,
     handleChatMessage,
-    forgetPassword,
-    resetPassword,
     getItemsByOwnerId,
     getCart
 };
