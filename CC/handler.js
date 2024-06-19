@@ -127,17 +127,36 @@ const addItem = (req, res) => {
         const imageUrl = `https://storage.googleapis.com/${bucketName}/${filename}`;
 
         const ownerId = req.user.id;
-        const sql = 'INSERT INTO items (name, description, price, image, owner_id) VALUES (?, ?, ?, ?, ?)';
 
-        db.query(sql, [name, description, price, imageUrl, ownerId], (err, result) => {
-            if (err) return res.status(500).send('Error on the server.');
-            res.status(201).send({ id: result.insertId });
+        // Ambil username dan email dari tabel users
+        const getUserSql = 'SELECT username, email FROM users WHERE id = ?';
+        db.query(getUserSql, [ownerId], (err, results) => {
+            if (err) {
+                console.error('Error fetching user data:', err);
+                return res.status(500).send('Error on the server.');
+            }
+
+            if (results.length === 0) {
+                return res.status(404).send('User not found.');
+            }
+
+            const username = results[0].username;
+            const email = results[0].email;
+
+            // Insert data ke dalam tabel items beserta username dan email
+            const sql = 'INSERT INTO items (name, description, price, image, owner_id, username, email) VALUES (?, ?, ?, ?, ?, ?, ?)';
+            db.query(sql, [name, description, price, imageUrl, ownerId, username, email], (err, result) => {
+                if (err) {
+                    console.error('Error inserting item:', err);
+                    return res.status(500).send('Error on the server.');
+                }
+                res.status(201).send({ id: result.insertId });
+            });
         });
     });
 
     blobStream.end(imageFile.buffer);
 };
-
 
 
 // Fungsi untuk memperbarui item
