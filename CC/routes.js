@@ -36,8 +36,4 @@ router.get('/cart', handlers.authenticateToken, handlers.getCart);
 router.delete('/cart', handlers.authenticateToken, handlers.deleteCartItem);
 
 
-// Rute untuk tracking barang
-router.get('/track/:orderId', handlers.authenticateToken, handlers.trackOrder);
-
-
 module.exports = router;
