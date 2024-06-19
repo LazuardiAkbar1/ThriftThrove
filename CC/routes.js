@@ -33,7 +33,6 @@ router.post('/checkout', handlers.authenticateToken, handlers.checkout);
 // Rute untuk CRUD cart
 router.put('/cart', handlers.authenticateToken, handlers.updateCartItem);
 router.get('/cart', handlers.authenticateToken, handlers.getCart);
-router.delete('/cart', handlers.authenticateToken, handlers.deleteCartItem);
-
+router.delete('/cart/:id', handlers.authenticateToken, handlers.deleteCartItem);
 
 module.exports = router;
