@@ -269,55 +269,33 @@ const deleteCartItem = (req, res) => {
 // Fungsi checkout
 const checkout = (req, res) => {
     const userId = req.user.id;
-    const { address, paymentMethod } = req.body;
+    const { address, name } = req.body;
 
     const getCartSql = 'SELECT * FROM cart WHERE user_id = ?';
     db.query(getCartSql, [userId], (err, cartItems) => {
-        if (err) return res.status(500).send('Error on the server.');
-        if (cartItems.length === 0) return res.status(400).send('No items in cart.');
+        if (err) {
+            return res.status(500).send('Error on the server.');
+        }
+        if (cartItems.length === 0) {
+            return res.status(400).send('No items in cart.');
+        }
 
-        const createOrderSql = 'INSERT INTO orders (user_id, address, payment_method) VALUES (?, ?, ?)';
-        db.query(createOrderSql, [userId, address, paymentMethod], (err, result) => {
-            if (err) return res.status(500).send('Error on the server.');
-            const orderId = result.insertId;
+        const createOrderItemsSql = 'INSERT INTO order_items (item_id, quantity, address, name) VALUES ?';
+        const orderItems = cartItems.map(item => [item.item_id, item.quantity, address, name]);
 
-            const createOrderItemsSql = 'INSERT INTO order_items (order_id, item_id, quantity) VALUES ?';
-            const orderItems = cartItems.map(item => [orderId, item.item_id, item.quantity]);
+        db.query(createOrderItemsSql, [orderItems], (err, result) => {
+            if (err) {
+                return res.status(500).send('Error on the server.');
+            }
 
-            db.query(createOrderItemsSql, [orderItems], (err) => {
-                if (err) return res.status(500).send('Error on the server.');
-
-                const clearCartSql = 'DELETE FROM cart WHERE user_id = ?';
-                db.query(clearCartSql, [userId], (err) => {
-                    if (err) return res.status(500).send('Error on the server.');
-                    res.status(200).send({ message: 'Checkout successful', orderId });
-                });
+            const clearCartSql = 'DELETE FROM cart WHERE user_id = ?';
+            db.query(clearCartSql, [userId], (err) => {
+                if (err) {
+                    return res.status(500).send('Error on the server.');
+                }
+                res.status(200).send({ message: 'Checkout successful' });
             });
         });
-    });
-};
-
-// Fungsi untuk melacak pesanan
-const trackOrder = (req, res) => {
-    const { orderId } = req.params;
-
-    const sql = 'SELECT * FROM orders WHERE id = ? AND user_id = ?';
-    db.query(sql, [orderId, req.user.id], (err, results) => {
-        if (err) return res.status(500).send('Error on the server.');
-        if (results.length === 0) return res.status(404).send('No order found.');
-        res.status(200).send(results[0]);
-    });
-};
-
-// Fungsi untuk menangani pesan chat
-const handleChatMessage = (socket, message) => {
-    const userId = message.userId;
-    const text = message.text;
-
-    const sql = 'INSERT INTO chats (user_id, message) VALUES (?, ?)';
-    db.query(sql, [userId, text], (err, result) => {
-        if (err) return console.error('Error on the server.');
-        socket.emit('receiveMessage', { userId, text });
     });
 };
 
@@ -364,8 +342,6 @@ module.exports = {
     updateCartItem,
     deleteCartItem,
     checkout,
-    trackOrder,
-    handleChatMessage,
     getItemsByOwnerId,
     getCart
 };
