@@ -1,1 +1,3 @@
 ThriftTrove is a project aimed at creating a mobile e-commerce application specializing in trading second-hand goods online. The application is designed to enhance the accessibility and experience of purchasing second-hand items online, with a focus on various categories including fashion and household items. The goal of ThriftTrove is to expand the online market for second-hand goods and contribute to environmental conservation efforts by promoting more sustainable consumption patterns.
+
+![image](https://github.com/LazuardiAkbar1/ThriftTrove/assets/130653891/b895ac0c-8d50-4722-a5a8-ca72da75b2ba)
