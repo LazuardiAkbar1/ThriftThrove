@@ -12,6 +12,8 @@ const upload = multer({ storage });
 router.post('/signup', handlers.signUp);
 // Masuk akun
 router.post('/login', handlers.login);
+// Rute untuk mendapatkan profil pengguna
+router.get('/profile', handlers.authenticateToken, handlers.getProfile);
 // Ambil semua item
 router.get('/items', handlers.getItems);
 // Ambil item sesuai dengan id
