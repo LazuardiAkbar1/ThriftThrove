@@ -63,6 +63,23 @@ const login = (req, res) => {
     });
 };
 
+// Fungsi untuk mendapatkan profil pengguna
+const getProfile = (req, res) => {
+    const userId = req.user.id;
+    const sql = 'SELECT id, username, email FROM users WHERE id = ?';
+
+    db.query(sql, [userId], (err, results) => {
+        if (err) {
+            console.error('Error fetching profile:', err);
+            return res.status(500).send('Error fetching profile.');
+        }
+        if (results.length === 0) return res.status(404).send('User not found.');
+
+        const user = results[0];
+        res.status(200).json(user);
+    });
+};
+
 // Fungsi untuk mengambil semua item
 const getItems = (req, res) => {
     const sql = 'SELECT * FROM items';
@@ -333,6 +350,7 @@ module.exports = {
     authenticateToken,
     signUp,
     login,
+    getProfile,
     getItems,
     getItemById,
     addItem,
