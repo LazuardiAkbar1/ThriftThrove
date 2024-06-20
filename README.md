@@ -15,6 +15,12 @@ Our team, inspired by the growing fashion thrifting trend and awareness of the p
 | C117D4KY0035  | Lazuardi Akbar Sopian                 | Cloud Computing     | Institut Teknologi Nasional Bandung     | [![LinkedIn](https://img.shields.io/badge/-LinkedIn-blue?style=flat&logo=Linkedin&logoColor=white)](https://www.linkedin.com/in/lazuardi-akbar-sopian-99a7b71bb/)          |
 | A009D4KY3572  | Ardhan Azhra Azmi                     | Mobile Development  | Universitas Gunadarma                   | [![LinkedIn](https://img.shields.io/badge/-LinkedIn-blue?style=flat&logo=Linkedin&logoColor=white)]([https://www.linkedin.com/in/ardhan-azhra-azmi](https://www.linkedin.com/in/ardhan-azhra-azmi-a86b49203/))              |
 | A006D4KY3671  | Muhammad Hasfi Rasya                  | Mobile Development  | Universitas Brawijaya                   | [![LinkedIn](https://img.shields.io/badge/-LinkedIn-blue?style=flat&logo=Linkedin&logoColor=white)](http://www.linkedin.com/in/hasfirasya)           |
-| M008D4KY3145  | Muhammad Nashih Ulwan                 | Machine Learning    | Universitas Gadjah Mada                 | [![LinkedIn](https://img.shields.io/badge/-LinkedIn-blue?style=flat&logo=Linkedin&logoColor=white)](https://www.linkedin.com/in/muhammad-nashih-ulwan)           |
+| M008D4KY3145  | Muhammad Nashih Ulwan                 | Machine Learning    | Universitas Gadjah Mada                 | [![LinkedIn](https://img.shields.io/badge/-LinkedIn-blue?style=flat&logo=Linkedin&logoColor=white)](https://www.linkedin.com/in/nashih-ulwan/)           |
 | M008D4KY1719  | Kadek Wahyu Medalika Manik Segara     | Machine Learning    | Universitas Gadjah Mada                 | [![LinkedIn](https://img.shields.io/badge/-LinkedIn-blue?style=flat&logo=Linkedin&logoColor=white)](https://www.linkedin.com/in/kadek-wahyu-medalika-manik-segara) |
-| M008D4KY3242  | Elbert Felix Arthur Tampubolon        | Machine Learning    | Universitas Gadjah Mada                 | [![LinkedIn](https://img.shields.io/badge/-LinkedIn-blue?style=flat&logo=Linkedin&logoColor=white)](https://www.linkedin.com/in/elbert-felix-arthur-tampubolon)  |
+| M008D4KY3242  | Elbert Felix Arthur Tampubolon        | Machine Learning    | Universitas Gadjah Mada                 | [![LinkedIn](https://img.shields.io/badge/-LinkedIn-blue?style=flat&logo=Linkedin&logoColor=white)](https://www.linkedin.com/in/elbert-tampubolon-0366a0206/)  |
+
+## Screenshot
+![Thrift Trove (4)](https://github.com/LazuardiAkbar1/ThriftTrove/assets/130653891/33a43252-fd31-4db4-8299-7dc0727c5e97)
+![Thrift Trove (2)](https://github.com/LazuardiAkbar1/ThriftTrove/assets/130653891/a0c67b0e-5c31-47e3-802a-3765b642f2b4)
+![Thrift Trove (3)](https://github.com/LazuardiAkbar1/ThriftTrove/assets/130653891/c4e43d21-0aaf-4741-a4b6-6e01eb7870fc)
+
