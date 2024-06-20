@@ -5,6 +5,9 @@ The market for buying and selling used goods is growing rapidly, especially in t
 Our team, inspired by the growing fashion thrifting trend and awareness of the positive impact reuse has on the environment, discovered that there was a huge but untapped opportunity in the online second-hand goods market. From there, we decided to develop the ThriftTrove project, an e-commerce mobile application specifically designed to facilitate used shopping with a fun and safe experience. In this way, we hope to fill the gap in the market and encourage more people to choose sustainable options in shopping and we also hope that the ThriftTrove mobile application can help second-hand goods hunters make it easier for them to find the items they want.
 
 ## Our Team Members
+![Thrift Trove](https://github.com/LazuardiAkbar1/ThriftTrove/assets/130653891/4acde880-169e-4e9a-8b69-7ce24e34c646)
+![Thrift Trove (1)](https://github.com/LazuardiAkbar1/ThriftTrove/assets/130653891/84adcaea-8e1b-401b-b32a-b51d0ed7b3aa)
+
 
 | Bangkit ID    | Name                                  | Learning Path       | University                              | LinkedIn                                                                                           |
 |---------------|---------------------------------------|---------------------|-----------------------------------------|----------------------------------------------------------------------------------------------------|
