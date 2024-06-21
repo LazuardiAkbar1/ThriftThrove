@@ -63,6 +63,23 @@ const login = (req, res) => {
     });
 };
 
+// Fungsi untuk mendapatkan profil pengguna
+const getProfile = (req, res) => {
+    const userId = req.user.id;
+    const sql = 'SELECT id, username, email FROM users WHERE id = ?';
+
+    db.query(sql, [userId], (err, results) => {
+        if (err) {
+            console.error('Error fetching profile:', err);
+            return res.status(500).send('Error fetching profile.');
+        }
+        if (results.length === 0) return res.status(404).send('User not found.');
+
+        const user = results[0];
+        res.status(200).json(user);
+    });
+};
+
 // Fungsi untuk mengambil semua item
 const getItems = (req, res) => {
     const sql = 'SELECT * FROM items';
@@ -127,17 +144,36 @@ const addItem = (req, res) => {
         const imageUrl = `https://storage.googleapis.com/${bucketName}/${filename}`;
 
         const ownerId = req.user.id;
-        const sql = 'INSERT INTO items (name, description, price, image, owner_id) VALUES (?, ?, ?, ?, ?)';
 
-        db.query(sql, [name, description, price, imageUrl, ownerId], (err, result) => {
-            if (err) return res.status(500).send('Error on the server.');
-            res.status(201).send({ id: result.insertId });
+        // Ambil username dan email dari tabel users
+        const getUserSql = 'SELECT username, email FROM users WHERE id = ?';
+        db.query(getUserSql, [ownerId], (err, results) => {
+            if (err) {
+                console.error('Error fetching user data:', err);
+                return res.status(500).send('Error on the server.');
+            }
+
+            if (results.length === 0) {
+                return res.status(404).send('User not found.');
+            }
+
+            const username = results[0].username;
+            const email = results[0].email;
+
+            // Insert data ke dalam tabel items beserta username dan email
+            const sql = 'INSERT INTO items (name, description, price, image, owner_id, username, email) VALUES (?, ?, ?, ?, ?, ?, ?)';
+            db.query(sql, [name, description, price, imageUrl, ownerId, username, email], (err, result) => {
+                if (err) {
+                    console.error('Error inserting item:', err);
+                    return res.status(500).send('Error on the server.');
+                }
+                res.status(201).send({ id: result.insertId });
+            });
         });
     });
 
     blobStream.end(imageFile.buffer);
 };
-
 
 
 // Fungsi untuk memperbarui item
@@ -234,10 +270,10 @@ const updateCartItem = (req, res) => {
 
 // Fungsi untuk menghapus item dari keranjang
 const deleteCartItem = (req, res) => {
-    const { cartId } = req.body;
+    const { id } = req.params; // Ambil 'id' dari parameter URL
 
     const sql = 'DELETE FROM cart WHERE id = ?';
-    db.query(sql, [cartId], (err, result) => {
+    db.query(sql, [id], (err, result) => {
         if (err) {
             console.error(err);
             return res.status(500).send('Error on the server.');
@@ -250,55 +286,33 @@ const deleteCartItem = (req, res) => {
 // Fungsi checkout
 const checkout = (req, res) => {
     const userId = req.user.id;
-    const { address, paymentMethod } = req.body;
+    const { address, name } = req.body;
 
     const getCartSql = 'SELECT * FROM cart WHERE user_id = ?';
     db.query(getCartSql, [userId], (err, cartItems) => {
-        if (err) return res.status(500).send('Error on the server.');
-        if (cartItems.length === 0) return res.status(400).send('No items in cart.');
+        if (err) {
+            return res.status(500).send('Error on the server.');
+        }
+        if (cartItems.length === 0) {
+            return res.status(400).send('No items in cart.');
+        }
 
-        const createOrderSql = 'INSERT INTO orders (user_id, address, payment_method) VALUES (?, ?, ?)';
-        db.query(createOrderSql, [userId, address, paymentMethod], (err, result) => {
-            if (err) return res.status(500).send('Error on the server.');
-            const orderId = result.insertId;
+        const createOrderItemsSql = 'INSERT INTO order_items (item_id, quantity, address, name) VALUES ?';
+        const orderItems = cartItems.map(item => [item.item_id, item.quantity, address, name]);
 
-            const createOrderItemsSql = 'INSERT INTO order_items (order_id, item_id, quantity) VALUES ?';
-            const orderItems = cartItems.map(item => [orderId, item.item_id, item.quantity]);
+        db.query(createOrderItemsSql, [orderItems], (err, result) => {
+            if (err) {
+                return res.status(500).send('Error on the server.');
+            }
 
-            db.query(createOrderItemsSql, [orderItems], (err) => {
-                if (err) return res.status(500).send('Error on the server.');
-
-                const clearCartSql = 'DELETE FROM cart WHERE user_id = ?';
-                db.query(clearCartSql, [userId], (err) => {
-                    if (err) return res.status(500).send('Error on the server.');
-                    res.status(200).send({ message: 'Checkout successful', orderId });
-                });
+            const clearCartSql = 'DELETE FROM cart WHERE user_id = ?';
+            db.query(clearCartSql, [userId], (err) => {
+                if (err) {
+                    return res.status(500).send('Error on the server.');
+                }
+                res.status(200).send({ message: 'Checkout successful' });
             });
         });
-    });
-};
-
-// Fungsi untuk melacak pesanan
-const trackOrder = (req, res) => {
-    const { orderId } = req.params;
-
-    const sql = 'SELECT * FROM orders WHERE id = ? AND user_id = ?';
-    db.query(sql, [orderId, req.user.id], (err, results) => {
-        if (err) return res.status(500).send('Error on the server.');
-        if (results.length === 0) return res.status(404).send('No order found.');
-        res.status(200).send(results[0]);
-    });
-};
-
-// Fungsi untuk menangani pesan chat
-const handleChatMessage = (socket, message) => {
-    const userId = message.userId;
-    const text = message.text;
-
-    const sql = 'INSERT INTO chats (user_id, message) VALUES (?, ?)';
-    db.query(sql, [userId, text], (err, result) => {
-        if (err) return console.error('Error on the server.');
-        socket.emit('receiveMessage', { userId, text });
     });
 };
 
@@ -336,6 +350,7 @@ module.exports = {
     authenticateToken,
     signUp,
     login,
+    getProfile,
     getItems,
     getItemById,
     addItem,
@@ -345,8 +360,6 @@ module.exports = {
     updateCartItem,
     deleteCartItem,
     checkout,
-    trackOrder,
-    handleChatMessage,
     getItemsByOwnerId,
     getCart
 };

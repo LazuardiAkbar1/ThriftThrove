@@ -12,6 +12,8 @@ const upload = multer({ storage });
 router.post('/signup', handlers.signUp);
 // Masuk akun
 router.post('/login', handlers.login);
+// Rute untuk mendapatkan profil pengguna
+router.get('/profile', handlers.authenticateToken, handlers.getProfile);
 // Ambil semua item
 router.get('/items', handlers.getItems);
 // Ambil item sesuai dengan id
@@ -33,11 +35,6 @@ router.post('/checkout', handlers.authenticateToken, handlers.checkout);
 // Rute untuk CRUD cart
 router.put('/cart', handlers.authenticateToken, handlers.updateCartItem);
 router.get('/cart', handlers.authenticateToken, handlers.getCart);
-router.delete('/cart', handlers.authenticateToken, handlers.deleteCartItem);
-
-
-// Rute untuk tracking barang
-router.get('/track/:orderId', handlers.authenticateToken, handlers.trackOrder);
-
+router.delete('/cart/:id', handlers.authenticateToken, handlers.deleteCartItem);
 
 module.exports = router;
