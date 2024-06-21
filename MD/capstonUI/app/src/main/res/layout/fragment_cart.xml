@@ -1,0 +1,58 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="16dp">
+
+
+
+    <TextView
+        android:id="@+id/tvCartTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/ivBack"
+        android:layout_alignBottom="@id/ivBack"
+        android:layout_marginStart="8dp"
+        android:text="Cart"
+        android:fontFamily="@font/bold"
+        android:textSize="18sp"
+        android:textColor="@android:color/black" />
+
+    <ImageView
+        android:id="@+id/ivBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_back"
+        android:backgroundTint="@color/black"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_cart"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_above="@+id/btnCheckout"
+        android:layout_below="@id/ivBack"
+        android:layout_marginBottom="1dp"
+        android:layout_weight="1"
+        android:padding="16dp" />
+
+    <ImageView
+        android:id="@+id/empty_cart_image"
+        android:layout_width="220dp"
+        android:layout_height="220dp"
+        android:layout_centerInParent="true"
+        android:src="@drawable/img_kosong"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/btnCheckout"
+        android:layout_width="match_parent"
+        android:layout_height="57dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/btn_bg"
+        android:layout_margin="55dp"
+        android:text="Checkout"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="35dp" /> <!-- Add margin to avoid overlap with navbar -->
+
+</RelativeLayout>

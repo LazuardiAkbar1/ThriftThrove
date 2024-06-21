@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">capstonUI</string>
+    <string name="tittle_welcome">Unearth your secondhand gems.</string>
+    <string name="message_weclome">Everything you need is only in Thrift Trove, cheap shopping for trusted used goods,Shop now</string>
+    <string name="todo">TODO</string>
+    <string name="login">Login</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="if_you_continue_you_are_accepting_nthrift_trove_terms_and_conditions_and_privacy_policy">If You Continue You Are Accepting\nTHRIFT TROVE Terms And Conditions And Privacy Policy</string>
+</resources>

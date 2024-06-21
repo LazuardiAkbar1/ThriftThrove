@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
+    tools:context=".welcome.WelcomeActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="1dp">
+
+        <ImageView
+            android:id="@+id/app_name_image"
+            android:layout_width="411dp"
+            android:layout_height="273dp"
+            android:layout_marginTop="-5dp"
+            android:layout_marginBottom="3dp"
+            android:src="@drawable/img_welcomes" />
+
+        <ImageView
+            android:id="@+id/additional_image"
+            android:layout_width="350dp"
+            android:layout_height="52dp"
+            android:layout_marginTop="12dp"
+            android:src="@drawable/txtxt" />
+
+        <TextView
+            android:id="@+id/welcome_text"
+            android:layout_width="321dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="1dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="@font/bold"
+            android:text="@string/tittle_welcome"
+            android:textColor="@color/black"
+            android:textSize="25sp" />
+
+        <TextView
+            android:id="@+id/tagline_text"
+            android:layout_width="299dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="32dp"
+            android:fontFamily="@font/medium"
+            android:text="@string/message_weclome"
+            android:textColor="@color/grey"
+            android:textSize="15sp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/Login"
+            android:layout_width="match_parent"
+            android:layout_height="57dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/btn_bg"
+            android:fontFamily="@font/bold"
+            android:paddingEnd="50dp"
+            android:text="Login"
+            android:textColor="@android:color/white"
+            app:icon="@drawable/ic_login"
+            app:iconGravity="start"
+            app:iconTint="@color/white" />
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/sign_up"
+            android:layout_width="match_parent"
+            android:layout_height="57dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/btn_bg_dp"
+            android:fontFamily="@font/bold"
+            android:text="Sign Up"
+            android:textColor="@android:color/black"
+            app:backgroundTint="@color/black" />
+
+    </LinearLayout>
+
+</RelativeLayout>

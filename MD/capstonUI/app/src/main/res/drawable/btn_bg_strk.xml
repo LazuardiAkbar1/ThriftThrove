@@ -1,0 +1,20 @@
+<!-- res/drawable/button_background_stroke_transparent.xml -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Background shape (transparent) -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@android:color/transparent" />
+            <corners android:radius="8dp" />
+        </shape>
+    </item>
+    <!-- Stroke shape (with stroke color and width) -->
+    <item android:top="2dp" android:right="2dp" android:bottom="2dp" android:left="2dp">
+        <shape android:shape="rectangle">
+            <solid android:color="@android:color/transparent" />
+            <stroke
+                android:width="2dp"
+                android:color="@android:color/black" /> <!-- Adjust stroke color and width as needed -->
+            <corners android:radius="8dp" />
+        </shape>
+    </item>
+</layer-list>

@@ -1,0 +1,15 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/bg_sign" /> <!-- Background color -->
+            <corners android:topLeftRadius="16dp" android:topRightRadius="16dp" /> <!-- Rounded corners at the top -->
+        </shape>
+    </item>
+    <item android:top="1dp">
+        <shape android:shape="rectangle">
+            <solid android:color="@android:color/background_light" /> <!-- Transparent color -->
+            <corners android:topLeftRadius="16dp" android:topRightRadius="16dp" /> <!-- Rounded corners at the top -->
+            <stroke android:width="1pt" android:color="@color/bg_sign" /> <!-- Red border -->
+        </shape>
+    </item>
+</layer-list>

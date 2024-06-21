@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".signup.SignUpActivity">
+
+
+    <ImageView
+        android:id="@+id/app_name_image"
+        android:layout_width="180dp"
+        android:layout_height="114dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="20dp"
+        android:src="@drawable/logo1"
+        app:layout_constraintBottom_toTopOf="@id/textView2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.75" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="160dp"
+        android:text="Hi. Welcome"
+        android:fontFamily="@font/bold"
+        android:textColor="@color/black"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="230dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="29dp"
+        android:layout_marginTop="2dp"
+        android:fontFamily="@font/medium"
+        android:text="Before the Journey for found a gems, Create your account first!!"
+        android:textColor="@color/grey"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textView2" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="60dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/textView2">
+
+
+        <TextView
+            android:id="@+id/usernameLabel4"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="7dp"
+            android:fontFamily="@font/medium"
+            android:text="Username"
+            android:textColor="@color/grey"
+            android:textSize="14sp" />
+
+
+
+    <EditText
+        android:id="@+id/nameEt_signUpPage"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:textSize="15sp"
+        android:paddingLeft="20dp"
+        android:drawableRight="@null"
+        android:paddingRight="20dp"
+        android:fontFamily="@font/medium"
+        android:textColor="@color/black"
+        android:background="@drawable/edittext_bg"
+        android:hint="Enter your name"
+        android:inputType="textPersonName"
+        android:drawableStart="@drawable/ic_user"
+        android:drawablePadding="8dp"
+        android:maxLines="1" />
+
+
+        <TextView
+            android:id="@+id/usernameLabel6"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="9dp"
+            android:layout_marginBottom="0dp"
+            android:layout_marginLeft="7dp"
+            android:fontFamily="@font/medium"
+            android:text="Email"
+            android:textColor="@color/grey"
+            android:textSize="14sp" />
+
+    <EditText
+        android:layout_marginTop="2dp"
+        android:id="@+id/emailEt_signUpPage"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:textSize="15sp"
+        android:paddingLeft="20dp"
+        android:drawableRight="@null"
+        android:fontFamily="@font/medium"
+        android:paddingRight="20dp"
+        android:textColor="@color/black"
+        android:background="@drawable/edittext_bg"
+        android:hint="Enter your Email"
+        android:inputType="textEmailAddress"
+        android:drawableStart="@drawable/ic_mail"
+        android:drawablePadding="8dp"
+        android:maxLines="1" />
+
+        <TextView
+            android:id="@+id/usernameLabel2"
+            android:layout_width="120dp"
+            android:layout_marginTop="9dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="7dp"
+            android:fontFamily="@font/medium"
+            android:text="Password"
+            android:textColor="@color/grey"
+            android:textSize="14sp" />
+
+    <EditText
+        android:layout_marginTop="2dp"
+        android:id="@+id/PassEt_signUpPage"
+        android:layout_width="match_parent"
+        android:fontFamily="@font/medium"
+        android:layout_height="50dp"
+        android:textSize="15sp"
+        android:textColor="@color/black"
+        android:drawableRight="@null"
+        android:paddingRight="20dp"
+        android:paddingLeft="20dp"
+        android:background="@drawable/edittext_bg"
+        android:hint="Enter your Password"
+        android:inputType="textPassword"
+        android:drawableStart="@drawable/ic_pass"
+        android:drawablePadding="8dp"
+        android:maxLines="1" />
+
+        <TextView
+            android:id="@+id/usernameLabel1"
+            android:layout_marginTop="9dp"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="7dp"
+            android:fontFamily="@font/medium"
+            android:text="Confirm Password"
+            android:textColor="@color/grey"
+            android:textSize="14sp" />
+
+    <EditText
+        android:layout_marginTop="2dp"
+        android:id="@+id/cPassEt_signUpPage"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:textSize="15sp"
+        android:textColor="@color/black"
+        android:fontFamily="@font/medium"
+        android:drawableRight="@null"
+        android:paddingRight="20dp"
+        android:paddingLeft="20dp"
+        android:background="@drawable/edittext_bg"
+        android:hint="Repeat Password"
+        android:inputType="textPassword"
+        android:drawableStart="@drawable/ic_pass"
+        android:drawablePadding="8dp"
+        android:maxLines="1" />
+
+
+    <Button
+        android:id="@+id/signUpBtn_signUpPage"
+        android:layout_width="match_parent"
+        android:layout_height="57dp"
+        android:background="@drawable/btn_bg"
+        android:fontFamily="@font/bold"
+        android:text="Sign Up"
+        android:layout_marginTop="40dp"
+        android:elevation="10dp"
+        />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

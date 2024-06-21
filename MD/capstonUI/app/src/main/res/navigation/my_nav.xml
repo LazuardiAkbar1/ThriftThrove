@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/my_nav"
+    app:startDestination="@id/exploreFragment">
+
+    <fragment
+        android:id="@+id/exploreFragment"
+        android:name="com.dicoding.capstonui.view.ExploreFragment"
+        android:label="fragment_first"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_exploreFragment_to_addFragment"
+            app:destination="@id/addFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/addFragment"
+        android:name="com.dicoding.capstonui.view.AddFragment"
+        tools:layout="@layout/activity_add_product">
+        <action
+            android:id="@+id/action_addFragment_to_exploreFragment"
+            app:destination="@id/exploreFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/userFragment"
+        android:name="com.dicoding.capstonui.view.UserFragment"
+        android:label="UserFragment"
+        tools:layout="@layout/fragment_user">
+        <action
+            android:id="@+id/action_userFragment_to_addFragment"
+            app:destination="@id/addFragment" />
+    </fragment>
+
+<!--    <fragment
+        android:id="@+id/cartFragment"
+        android:name="com.dicoding.capstonui.view.CartFragment"
+        android:label="fragment_third"
+        tools:layout="@layout/fragment_cartr" />
+    <fragment
+        android:id="@+id/transactionFragment"
+        android:name="com.dicoding.capstponui.view.TransactionFragment"
+        android:label="fragment_fourth"
+        tools:layout="@layout/fragment_user" />-->
+
+</navigation>
